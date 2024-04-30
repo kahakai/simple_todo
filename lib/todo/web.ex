@@ -4,6 +4,14 @@ defmodule Todo.Web do
   plug :match
   plug :dispatch
 
+  def child_spec(_arg) do
+    Plug.Cowboy.child_spec(
+      scheme: :http,
+      options: [port: Application.fetch_env!(:todo, :http_port)],
+      plug: __MODULE__
+    )
+  end
+
   post "/add_entry" do
     conn = Plug.Conn.fetch_query_params(conn)
     list_name = Map.fetch!(conn.params, "list")
@@ -37,13 +45,5 @@ defmodule Todo.Web do
     conn
     |> Plug.Conn.put_resp_content_type("text/plain")
     |> Plug.Conn.send_resp(200, formatted_entries)
-  end
-
-  def child_spec(_arg) do
-    Plug.Cowboy.child_spec(
-      scheme: :http,
-      options: [port: Application.fetch_env!(:todo, :http_port)],
-      plug: __MODULE__
-    )
   end
 end
