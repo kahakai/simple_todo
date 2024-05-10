@@ -18,6 +18,12 @@ defmodule Todo.MixProject do
     ]
   end
 
+  def cli do
+    [
+      preferred_envs: [release: :prod]
+    ]
+  end
+
   defp deps do
     [
       {:poolboy, "~> 1.5"},
